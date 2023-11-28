@@ -26,23 +26,41 @@ The `Start()` method initializes the script by triggering the event initially (i
 
 The `TriggerEvent()` method is called by the timer and invokes the assigned UnityEvent, allowing users to define their custom logic or actions to be executed.
 
-## Example Usage
+## Code
 
 ```csharp
-// Example of subscribing to the RandomTimedEvent
-public class ExampleClass : MonoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class RandomTimedEvent : MonoBehaviour
 {
-    public RandomTimedEvent randomTimedEvent;
+    [Header("Time Intervals")]
+    [Tooltip("Minimum time in seconds")]
+    public float minInterval = 300f;
+
+    [Tooltip("Maximum time in seconds")]
+    public float maxInterval = 600f;
+
+    [Header("Event")]
+    public UnityEvent RandomTimedEvent_Event;
+
+    [Tooltip("Enable to trigger the event initially")]
+    public bool triggerInitially = true;
 
     private void Start()
     {
-        // Subscribe to the RandomTimedEvent's UnityEvent
-        randomTimedEvent.RandomTimedEvent_Event.AddListener(YourCustomMethod);
+        if (triggerInitially)
+            TriggerEvent(); // Trigger the event initially if enabled
+
+        // Invoke the TriggerEvent method randomly between minInterval and maxInterval
+        InvokeRepeating("TriggerEvent", Random.Range(minInterval, maxInterval), Random.Range(minInterval, maxInterval));
     }
 
-    private void YourCustomMethod()
+    private void TriggerEvent()
     {
-        // Your custom logic or action to be executed when the event is triggered
-        Debug.Log("Random event occurred!");
+        // Your event or code to trigger goes here
+        RandomTimedEvent_Event.Invoke();
     }
 }
